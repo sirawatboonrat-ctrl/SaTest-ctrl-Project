@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sa-Khon · Supabase</title>
+    <title>SaTest-ctrl's Project</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -114,12 +114,6 @@
         font-size: clamp(1.6rem, 4vw, 2.05rem);
         line-height: 1.25;
         margin-bottom: 0.45rem;
-      }
-
-      .lead {
-        color: var(--muted);
-        margin-bottom: 1.35rem;
-        font-size: 1.02rem;
       }
 
       .actions {
@@ -266,7 +260,7 @@
       <header>
         <div class="logo" aria-hidden="true">SK</div>
         <div>
-          <p class="brand-title">Sa-Khon</p>
+          <p class="brand-title">SaTest-ctrl's Project</p>
           <p class="brand-sub">เชื่อมฐานข้อมูลกับ Supabase</p>
         </div>
       </header>
@@ -285,12 +279,12 @@
 
         <div class="meta">
           <div class="chip">
-            <span>Project ID</span>
-            <strong>vvycnhmvjcxunotqnexr</strong>
+            <span>ชื่อโปรเจกต์</span>
+            <strong>SaTest-ctrl's Project</strong>
           </div>
           <div class="chip">
-            <span>Region</span>
-            <strong>ap-southeast-1 · Singapore</strong>
+            <span>Project ID</span>
+            <strong>vvycnhmvjcxunotqnexr</strong>
           </div>
         </div>
       </main>
@@ -318,30 +312,31 @@
 
           try {
             const supabase = window.createSupabaseClient();
-            const { error } = await supabase
-              .from("_connection_check")
-              .select("*")
-              .limit(1);
+            const { error } = await supabase.auth.getSession();
+            if (error) throw error;
 
-            const missingTable =
-              error &&
-              (error.code === "42P01" ||
-                /could not find the table|schema cache/i.test(error.message || ""));
+            const res = await fetch(window.supabaseUrl + "/rest/v1/", {
+              headers: {
+                apikey: window.supabaseAnonKey,
+                Authorization: "Bearer " + window.supabaseAnonKey,
+              },
+            });
 
-            if (missingTable) {
+            if (res.status === 401 || res.status === 403) {
               setStatus(
-                "ok",
-                "เชื่อมต่อ Supabase สำเร็จ"
+                "err",
+                "คีย์ไม่ถูกต้องหรือไม่มีสิทธิ์ (HTTP " + res.status + ")"
               );
-            } else if (error && (error.message || "").toLowerCase().includes("jwt")) {
-              setStatus("err", "คีย์หรือ URL ไม่ถูกต้อง: " + error.message);
-            } else if (error) {
-              setStatus("ok", "เชื่อมต่อเซิร์ฟเวอร์ Supabase ได้แล้ว: " + error.message);
+            } else if (res.ok) {
+              setStatus("ok", "เชื่อมต่อ Supabase สำเร็จ");
             } else {
-              setStatus("ok", "เชื่อมต่อและอ่านข้อมูลได้สำเร็จ");
+              setStatus(
+                "err",
+                "เซิร์ฟเวอร์ตอบกลับผิดปกติ (HTTP " + res.status + ")"
+              );
             }
           } catch (err) {
-            setStatus("err", err.message);
+            setStatus("err", "เชื่อมต่อไม่ได้: " + err.message);
           } finally {
             testBtn.disabled = false;
           }
