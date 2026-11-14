@@ -30,7 +30,6 @@
   .msg.show{display:block;}
   button.go{margin-top:22px; width:100%; background:var(--green-700); color:#fff; border:none; padding:14px; border-radius:10px; font-family:inherit; font-size:16px; font-weight:600; cursor:pointer;}
   button.go:hover{background:var(--green-900);}
-
   button.go:disabled{opacity:.6; cursor:wait;}
   .alt{text-align:center; margin-top:16px; font-size:14px; color:var(--ink-soft);}
   .alt a{color:var(--green-700); font-weight:600;}
@@ -63,7 +62,6 @@
   <a href="../index.html" class="brand" title="กลับหน้าแรก">
     <div class="logo-slot">ใส่โลโก้</div>
     <div><div class="name">เกษตร</div><div class="tag">ระบบหลังบ้าน</div></div>
-
   </a>
 
   <div id="formWrap">
@@ -96,7 +94,6 @@
       </div>
       <div class="msg" id="msg" role="alert"></div>
       <button type="submit" class="go" id="goBtn">สมัครสมาชิก</button>
-
     </form>
     <p class="alt">มีบัญชีแล้ว? <a href="login.html">เข้าสู่ระบบ</a></p>
   </div>
@@ -129,7 +126,6 @@
       chr: /[A-Za-z]/.test(p) || /[^A-Za-z0-9\s]/.test(p),
       max: p.length > 0 && p.length <= MAX_LEN
     };
-
   }
   const COMMON = /^(password|passw0rd|qwerty|qwertyui|abc12345|iloveyou|admin123|letmein|welcome|11111111|12345678|123456789|1234567890|00000000|asdfghjk)/i;
   const LEVELS = [
@@ -162,7 +158,6 @@
     $('meterTxt').textContent = lv.t ? 'ระดับ: ' + lv.t : '';
     $('meterTxt').style.color = lv.c === 'transparent' ? '' : lv.c;
   }
-
   $('pw').addEventListener('input', updateMeter);
 
   /* ===== ตรวจสอบอีเมล: รูปแบบ → พิมพ์ผิดบ่อย → โดเมนมีอยู่จริง (DNS) ===== */
@@ -195,7 +190,6 @@
       return {ok:false, msg:'พิมพ์ผิดหรือเปล่า? คุณหมายถึง <a href="#" data-fix="' + fixed + '">' + fixed + '</a>'};
     }
     if(mailCache[domain] === undefined) mailCache[domain] = await domainCanReceive(domain);
-
     if(mailCache[domain] === false) return {ok:false, msg:'ไม่พบโดเมน "' + domain + '" หรือโดเมนนี้รับอีเมลไม่ได้ กรุณาตรวจสอบอีเมลอีกครั้ง'};
     if(mailCache[domain] === null){ delete mailCache[domain]; return {ok:true, msg:'ตรวจสอบโดเมนไม่ได้ในขณะนี้ (ระบบจะส่งอีเมลยืนยันให้อีกครั้ง)', unverified:true}; }
     return {ok:true, msg:'โดเมนอีเมลนี้ใช้งานได้ (ยืนยันกล่องจดหมายผ่านอีเมลที่ระบบจะส่งให้)'};
@@ -227,7 +221,6 @@
     if(m.includes('fetch') || m.includes('network')) return 'เชื่อมต่ออินเทอร์เน็ตไม่ได้ กรุณาลองใหม่';
     return 'สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่';
   }
-
 
   $('showBtn').addEventListener('click', () => {
     const show = $('pw').type === 'password';
@@ -261,5 +254,4 @@
   });
 </script>
 </body>
-
 </html>
