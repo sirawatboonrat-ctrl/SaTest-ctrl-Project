@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เข้าสู่ระบบหลังบ้าน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="admin-auth.js"></script>
+<style>
+  :root{--green-900:#0f3d24; --green-700:#1a5c37; --green-600:#22703f; --green-500:#2d8a4e; --green-100:#e7f3ea; --green-050:#f5faf6; --cream:#fdfcf8; --ink:#152016; --ink-soft:#4c5c50; --line:#dbe8dd; --white:#fff; --red:#b3382c; --red-100:#fbeceb;}
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Sarabun',sans-serif; color:var(--ink); background:linear-gradient(180deg,var(--green-050),var(--cream)); line-height:1.6; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;}
+  a{color:inherit; text-decoration:none;}
+  .box{width:100%; max-width:420px; background:var(--white); border:1px solid var(--line); border-radius:20px; padding:34px 32px; box-shadow:0 18px 40px rgba(15,61,36,.08);}
+  .brand{display:flex; align-items:center; gap:14px; margin-bottom:22px;}
+  .logo-slot{width:52px; height:52px; border-radius:12px; border:1.5px dashed #b9d6c1; background:var(--green-050); display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--green-600); text-align:center; line-height:1.3; flex-shrink:0;}
+  .brand .name{font-size:20px; font-weight:700; color:var(--green-900);}
+  .brand .tag{font-size:12.5px; color:var(--ink-soft);}
+  h1{font-size:24px; color:var(--green-900);}
+  .sub{font-size:14px; color:var(--ink-soft); margin-top:4px;}
+  .field{margin-top:18px;}
+  label{display:block; font-size:13.5px; font-weight:600; color:var(--green-900); margin-bottom:6px;}
+  .inp{position:relative;}
+  input{width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:10px; font-family:inherit; font-size:15px; background:var(--cream); color:var(--ink);}
+  input:focus{outline:none; border-color:var(--green-500);}
+  .inp input{padding-right:70px;}
+  .show{position:absolute; right:8px; top:50%; transform:translateY(-50%); border:none; background:none; color:var(--green-700); font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; padding:6px 8px;}
+  .msg{display:none; margin-top:16px; padding:10px 14px; border-radius:10px; background:var(--red-100); color:var(--red); font-size:13.5px;}
+  .msg.show{display:block;}
+  button.go{margin-top:22px; width:100%; background:var(--green-700); color:#fff; border:none; padding:14px; border-radius:10px; font-family:inherit; font-size:16px; font-weight:600; cursor:pointer;}
+  button.go:hover{background:var(--green-900);}
+  button.go:disabled{opacity:.6; cursor:wait;}
+  .alt{text-align:center; margin-top:16px; font-size:14px; color:var(--ink-soft);}
+  .alt a{color:var(--green-700); font-weight:600;}
+  .alt a:hover{text-decoration:underline;}
+  .back{display:block; text-align:center; margin-top:18px; font-size:13.5px; color:var(--ink-soft);}
+  .back:hover{color:var(--green-700);}
+</style>
+</head>
+<body>
+<div class="box">
+  <a href="../index.html" class="brand" title="กลับหน้าแรก">
+    <div class="logo-slot">ใส่โลโก้</div>
+    <div><div class="name">เกษตร</div><div class="tag">ระบบหลังบ้าน</div></div>
+  </a>
+  <h1>เข้าสู่ระบบ</h1>
+  <p class="sub">สำหรับผู้ดูแลระบบเท่านั้น</p>
+
+  <form id="f" novalidate>
+    <div class="field">
+      <label for="em">อีเมล</label>
+      <input type="email" id="em" autocomplete="username" placeholder="name@example.com" required>
+    </div>
+    <div class="field">
+      <label for="pw">รหัสผ่าน</label>
+      <div class="inp">
+        <input type="password" id="pw" autocomplete="current-password" placeholder="รหัสผ่าน" required>
+        <button type="button" class="show" id="showBtn">แสดง</button>
+      </div>
+    </div>
+    <div class="msg" id="msg" role="alert"></div>
+    <button type="submit" class="go" id="goBtn">เข้าสู่ระบบ</button>
+  </form>
+  <p class="alt">ยังไม่มีบัญชี? <a href="register.html">สมัครสมาชิก</a></p>
+  <a href="../index.html" class="back">← กลับหน้าแรก</a>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const auth = window.ksAuth || {};
+  const params = new URLSearchParams(location.search);
+  const nextPage = /^admin[\w-]*\.html$/.test(params.get('next') || '') ? params.get('next') : 'admin-home.html';
+
+  function showMsg(t){ $('msg').textContent = t; $('msg').classList.add('show'); }
+  function thaiError(e){
+    const m = (e && e.message || '').toLowerCase();
+    if(m.includes('invalid login') || (e && e.code === 'invalid_credentials')) return 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+    if(m.includes('email not confirmed')) return 'อีเมลนี้ยังไม่ได้ยืนยัน กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ';
+    if(m.includes('rate limit') || m.includes('too many')) return 'ลองหลายครั้งเกินไป กรุณารอสักครู่แล้วลองใหม่';
+    if(m.includes('fetch') || m.includes('network')) return 'เชื่อมต่ออินเทอร์เน็ตไม่ได้ กรุณาลองใหม่';
+    return 'เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่';
+  }
+
+  auth.getSession().then(s => {
+    if(s && s.admin) location.replace(nextPage);
+    else if(s){ showMsg('บัญชีนี้ยังไม่ได้รับอนุมัติให้เข้าหลังบ้าน กรุณาติดต่อผู้ดูแลระบบ'); auth.signOut(); }
+  }).catch(() => {});
+
+  $('showBtn').addEventListener('click', () => {
+    const show = $('pw').type === 'password';
+    $('pw').type = show ? 'text' : 'password';
+    $('showBtn').textContent = show ? 'ซ่อน' : 'แสดง';
+  });
+
+  $('f').addEventListener('submit', async e => {
+    e.preventDefault();
+    $('msg').classList.remove('show');
+    const email = $('em').value.trim(), password = $('pw').value;
+    if(!email || !password){ showMsg('กรุณากรอกอีเมลและรหัสผ่าน'); return; }
+    $('goBtn').disabled = true; $('goBtn').textContent = 'กำลังเข้าสู่ระบบ...';
+    try{
+      await auth.signIn(email, password);
+      const s = await auth.getSession();
+      if(!s || !s.admin){
+        await auth.signOut();
+        showMsg('บัญชีนี้ยังไม่ได้รับอนุมัติให้เข้าหลังบ้าน กรุณาติดต่อผู้ดูแลระบบ');
+        $('goBtn').disabled = false; $('goBtn').textContent = 'เข้าสู่ระบบ';
+        return;
+      }
+      location.replace(nextPage);
+    }catch(err){
+      showMsg(thaiError(err));
+      $('goBtn').disabled = false; $('goBtn').textContent = 'เข้าสู่ระบบ';
+    }
+  });
+</script>
+</body>
+</html>

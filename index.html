@@ -20,7 +20,7 @@
   ul{list-style:none;}
   .wrap{max-width:1240px; margin:0 auto; padding:0 32px;}
 
-  .ph{
+.ph{
     background:
       linear-gradient(135deg, var(--green-100) 25%, transparent 25%) -10px 0/20px 20px,
       linear-gradient(225deg, var(--green-100) 25%, transparent 25%) -10px 0/20px 20px,
@@ -333,6 +333,22 @@
     nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
   })();
 </script>
-
+<script>
+  /* คีย์ลัดลับ: กด T + A + R พร้อมกัน เพื่อไปหน้า Login */
+  (function(){
+    const LOGIN_URL = 'login/Login.html';   // 
+    const need = ['KeyT', 'KeyA', 'KeyR'];
+    const down = new Set();
+    document.addEventListener('keydown', e => {
+      if(e.ctrlKey || e.metaKey || e.altKey) return;
+      const t = e.target && e.target.tagName;
+      if(t === 'INPUT' || t === 'TEXTAREA' || (e.target && e.target.isContentEditable)) return;
+      down.add(e.code);
+      if(need.every(k => down.has(k))){ down.clear(); location.href = LOGIN_URL; }
+    });
+    document.addEventListener('keyup', e => down.delete(e.code));
+    window.addEventListener('blur', () => down.clear());
+  })();
+</script>
 </body>
 </html>

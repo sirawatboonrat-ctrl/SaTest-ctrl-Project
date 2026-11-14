@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สมัครสมาชิก | หลังบ้าน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="admin-auth.js"></script>
+<style>
+  :root{--green-900:#0f3d24; --green-700:#1a5c37; --green-600:#22703f; --green-500:#2d8a4e; --green-100:#e7f3ea; --green-050:#f5faf6; --cream:#fdfcf8; --ink:#152016; --ink-soft:#4c5c50; --line:#dbe8dd; --white:#fff; --red:#b3382c; --red-100:#fbeceb;}
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Sarabun',sans-serif; color:var(--ink); background:linear-gradient(180deg,var(--green-050),var(--cream)); line-height:1.6; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;}
+  a{color:inherit; text-decoration:none;}
+  .box{width:100%; max-width:420px; background:var(--white); border:1px solid var(--line); border-radius:20px; padding:34px 32px; box-shadow:0 18px 40px rgba(15,61,36,.08);}
+  .brand{display:flex; align-items:center; gap:14px; margin-bottom:22px;}
+  .logo-slot{width:52px; height:52px; border-radius:12px; border:1.5px dashed #b9d6c1; background:var(--green-050); display:flex; align-items:center; justify-content:center; font-size:10px; color:var(--green-600); text-align:center; line-height:1.3; flex-shrink:0;}
+  .brand .name{font-size:20px; font-weight:700; color:var(--green-900);}
+  .brand .tag{font-size:12.5px; color:var(--ink-soft);}
+  h1{font-size:24px; color:var(--green-900);}
+  .sub{font-size:14px; color:var(--ink-soft); margin-top:4px;}
+  .field{margin-top:18px;}
+  label{display:block; font-size:13.5px; font-weight:600; color:var(--green-900); margin-bottom:6px;}
+  .inp{position:relative;}
+  input{width:100%; padding:12px 14px; border:1.5px solid var(--line); border-radius:10px; font-family:inherit; font-size:15px; background:var(--cream); color:var(--ink);}
+  input:focus{outline:none; border-color:var(--green-500);}
+  .inp input{padding-right:70px;}
+  .show{position:absolute; right:8px; top:50%; transform:translateY(-50%); border:none; background:none; color:var(--green-700); font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; padding:6px 8px;}
+  .msg{display:none; margin-top:16px; padding:10px 14px; border-radius:10px; background:var(--red-100); color:var(--red); font-size:13.5px;}
+  .msg.show{display:block;}
+  button.go{margin-top:22px; width:100%; background:var(--green-700); color:#fff; border:none; padding:14px; border-radius:10px; font-family:inherit; font-size:16px; font-weight:600; cursor:pointer;}
+  button.go:hover{background:var(--green-900);}
+
+  button.go:disabled{opacity:.6; cursor:wait;}
+  .alt{text-align:center; margin-top:16px; font-size:14px; color:var(--ink-soft);}
+  .alt a{color:var(--green-700); font-weight:600;}
+  .alt a:hover{text-decoration:underline;}
+  .back{display:block; text-align:center; margin-top:18px; font-size:13.5px; color:var(--ink-soft);}
+  .back:hover{color:var(--green-700);}
+  .ok{display:none; text-align:center; padding:8px 0 4px;}
+  .ok.show{display:block;}
+  .ok .tick{width:60px; height:60px; border-radius:50%; background:var(--green-100); margin:6px auto 14px; display:flex; align-items:center; justify-content:center; font-size:28px; color:var(--green-700);}
+  .ok h2{font-size:20px; color:var(--green-900); margin-bottom:6px;}
+  .ok p{font-size:14px; color:var(--ink-soft); margin-bottom:6px;}
+  .hint{font-size:12.5px; color:var(--ink-soft); margin-top:5px;}
+  .meter{display:flex; align-items:center; gap:10px; margin-top:10px;}
+  .bar{flex:1; height:8px; background:var(--line); border-radius:8px; overflow:hidden;}
+  .bar i{display:block; height:100%; width:0; border-radius:8px; transition:width .2s ease, background .2s ease;}
+  #meterTxt{font-size:12.5px; font-weight:600; min-width:84px; text-align:right; color:var(--ink-soft);}
+  .counter{font-size:12.5px; color:var(--ink-soft); text-align:right; margin-top:4px;}
+  .rules{list-style:none; margin-top:10px; font-size:13px; color:var(--ink-soft);}
+  .rules li{padding-left:22px; position:relative; margin-top:3px;}
+  .rules li::before{content:'○'; position:absolute; left:2px; color:#9bb0a2;}
+  .rules li.pass{color:var(--green-700);}
+  .rules li.pass::before{content:'✓'; color:var(--green-600); font-weight:700;}
+  .hint.pass{color:var(--green-700);}
+  .hint.bad{color:var(--red);}
+  .hint a{color:var(--green-700); font-weight:700; text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="box">
+  <a href="../index.html" class="brand" title="กลับหน้าแรก">
+    <div class="logo-slot">ใส่โลโก้</div>
+    <div><div class="name">เกษตร</div><div class="tag">ระบบหลังบ้าน</div></div>
+
+  </a>
+
+  <div id="formWrap">
+    <h1>สมัครสมาชิก</h1>
+    <p class="sub">สมัครแล้วต้องรอผู้ดูแลอนุมัติ จึงจะเข้าหลังบ้านได้</p>
+
+    <form id="f" novalidate>
+      <div class="field">
+        <label for="em">อีเมล</label>
+        <input type="email" id="em" autocomplete="username" placeholder="name@example.com" required>
+        <div class="hint" id="emHint"></div>
+      </div>
+      <div class="field">
+        <label for="pw">รหัสผ่าน</label>
+        <div class="inp">
+          <input type="password" id="pw" autocomplete="new-password" placeholder="ตั้งรหัสผ่าน" maxlength="20" required>
+          <button type="button" class="show" id="showBtn">แสดง</button>
+        </div>
+        <div class="counter"><span id="pwCount">0</span>/20</div>
+        <div class="meter"><div class="bar"><i id="barFill"></i></div><span id="meterTxt"></span></div>
+        <ul class="rules" id="rules">
+          <li data-r="num"></li>
+          <li data-r="chr">มีตัวอักษร (พิมพ์ใหญ่หรือพิมพ์เล็ก) หรืออักขระพิเศษ อย่างน้อย 1 ตัว</li>
+          <li data-r="max"></li>
+        </ul>
+      </div>
+      <div class="field">
+        <label for="pw2">ยืนยันรหัสผ่าน</label>
+        <input type="password" id="pw2" autocomplete="new-password" placeholder="พิมพ์รหัสผ่านอีกครั้ง" maxlength="20" required>
+      </div>
+      <div class="msg" id="msg" role="alert"></div>
+      <button type="submit" class="go" id="goBtn">สมัครสมาชิก</button>
+
+    </form>
+    <p class="alt">มีบัญชีแล้ว? <a href="login.html">เข้าสู่ระบบ</a></p>
+  </div>
+
+  <div class="ok" id="ok">
+    <div class="tick">✓</div>
+    <h2>สมัครสมาชิกเรียบร้อย</h2>
+    <p>ถ้ามีอีเมลยืนยันส่งไป กรุณากดลิงก์ในอีเมลก่อน</p>
+    <p>จากนั้นรอผู้ดูแลระบบอนุมัติสิทธิ์ แล้วจึงเข้าสู่ระบบหลังบ้านได้</p>
+    <a href="login.html" class="back">ไปหน้าเข้าสู่ระบบ</a>
+  </div>
+  <a href="../index.html" class="back">← กลับหน้าแรก</a>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const auth = window.ksAuth || {};
+
+  /* ===== ข้อกำหนดรหัสผ่าน (ปรับตัวเลขได้ที่นี่) ===== */
+  const MIN_DIGITS = 8;   // จำนวนตัวเลขขั้นต่ำ
+  const MAX_LEN = 20;     // ความยาวสูงสุด
+  $('rules').querySelector('[data-r="num"]').textContent = 'มีตัวเลขอย่างน้อย ' + MIN_DIGITS + ' ตัว';
+  $('rules').querySelector('[data-r="max"]').textContent = 'ความยาวไม่เกิน ' + MAX_LEN + ' ตัวอักษร';
+  $('pw').maxLength = MAX_LEN;
+  $('pw2').maxLength = MAX_LEN;
+
+  function checkRules(p){
+    return {
+      num: (p.match(/\d/g) || []).length >= MIN_DIGITS,
+      chr: /[A-Za-z]/.test(p) || /[^A-Za-z0-9\s]/.test(p),
+      max: p.length > 0 && p.length <= MAX_LEN
+    };
+
+  }
+  const COMMON = /^(password|passw0rd|qwerty|qwertyui|abc12345|iloveyou|admin123|letmein|welcome|11111111|12345678|123456789|1234567890|00000000|asdfghjk)/i;
+  const LEVELS = [
+    {t:'', c:'transparent', w:0},
+    {t:'อ่อน', c:'#c0392b', w:25},
+    {t:'ปานกลาง', c:'#e08a1e', w:50},
+    {t:'แข็งแรง', c:'#4a9d5b', w:75},
+    {t:'แข็งแรงมาก', c:'#1a5c37', w:100}
+  ];
+  function strength(p){
+    if(!p) return 0;
+    const r = checkRules(p);
+    if(!(r.num && r.chr && r.max)) return 1;          // ยังไม่ผ่านเงื่อนไข = อ่อน
+    let s = 0;
+    if(p.length >= 12) s++;
+    if(p.length >= 16) s++;
+    const kinds = [/[a-z]/, /[A-Z]/, /\d/, /[^A-Za-z0-9]/].filter(x => x.test(p)).length;
+    s += Math.max(0, kinds - 2);                       // ตัวเลข + อีก 1 ชนิดเป็นพื้นฐานอยู่แล้ว
+    if(/^(.)\1+$/.test(p)) return 1;
+    if(COMMON.test(p)) s = Math.min(s, 0);
+    if(/(0123|1234|2345|3456|4567|5678|6789|abcd|qwer)/i.test(p)) s = Math.max(0, s - 1);
+    return s <= 0 ? 1 : s === 1 ? 2 : s === 2 ? 3 : 4;
+  }
+  function updateMeter(){
+    const p = $('pw').value, r = checkRules(p), lv = LEVELS[strength(p)];
+    $('pwCount').textContent = p.length;
+    $('rules').querySelectorAll('li').forEach(li => li.classList.toggle('pass', !!r[li.dataset.r]));
+    $('barFill').style.width = lv.w + '%';
+    $('barFill').style.background = lv.c;
+    $('meterTxt').textContent = lv.t ? 'ระดับ: ' + lv.t : '';
+    $('meterTxt').style.color = lv.c === 'transparent' ? '' : lv.c;
+  }
+
+  $('pw').addEventListener('input', updateMeter);
+
+  /* ===== ตรวจสอบอีเมล: รูปแบบ → พิมพ์ผิดบ่อย → โดเมนมีอยู่จริง (DNS) ===== */
+  const TYPO = {'gmial.com':'gmail.com','gamil.com':'gmail.com','gmail.con':'gmail.com','gmail.co':'gmail.com','gmai.com':'gmail.com','gmail.cm':'gmail.com',
+    'hotmial.com':'hotmail.com','hotmail.con':'hotmail.com','yahoo.con':'yahoo.com','yaho.com':'yahoo.com','outlook.con':'outlook.com','outlok.com':'outlook.com'};
+  const mailCache = {};
+  function setHint(html, cls){ $('emHint').className = 'hint ' + (cls || ''); $('emHint').innerHTML = html; }
+  async function dns(name, type, signal){
+    const r = await fetch('https://dns.google/resolve?name=' + encodeURIComponent(name) + '&type=' + type, {signal});
+    return r.json();
+  }
+  /* true = โดเมนรับอีเมลได้, false = ไม่มีโดเมน/รับอีเมลไม่ได้, null = ตรวจไม่ได้ (เครือข่าย) */
+  async function domainCanReceive(domain){
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 5000);
+    try{
+      const mx = await dns(domain, 'MX', ctl.signal);
+      if(mx.Answer && mx.Answer.some(a => a.type === 15)) return !mx.Answer.every(a => /^0\s*\.?$/.test(String(a.data).trim()));
+      if(mx.Status === 3) return false;
+      const a = await dns(domain, 'A', ctl.signal);
+      return !!(a.Answer && a.Answer.some(x => x.type === 1));
+    }catch(e){ return null; }
+    finally{ clearTimeout(timer); }
+  }
+  /* คืนค่า {ok, msg} */
+  async function checkEmail(email){
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return {ok:false, msg:'รูปแบบอีเมลไม่ถูกต้อง'};
+    const [local, domain] = [email.slice(0, email.lastIndexOf('@')), email.slice(email.lastIndexOf('@') + 1).toLowerCase()];
+    if(TYPO[domain]){
+      const fixed = local + '@' + TYPO[domain];
+      return {ok:false, msg:'พิมพ์ผิดหรือเปล่า? คุณหมายถึง <a href="#" data-fix="' + fixed + '">' + fixed + '</a>'};
+    }
+    if(mailCache[domain] === undefined) mailCache[domain] = await domainCanReceive(domain);
+
+    if(mailCache[domain] === false) return {ok:false, msg:'ไม่พบโดเมน "' + domain + '" หรือโดเมนนี้รับอีเมลไม่ได้ กรุณาตรวจสอบอีเมลอีกครั้ง'};
+    if(mailCache[domain] === null){ delete mailCache[domain]; return {ok:true, msg:'ตรวจสอบโดเมนไม่ได้ในขณะนี้ (ระบบจะส่งอีเมลยืนยันให้อีกครั้ง)', unverified:true}; }
+    return {ok:true, msg:'โดเมนอีเมลนี้ใช้งานได้ (ยืนยันกล่องจดหมายผ่านอีเมลที่ระบบจะส่งให้)'};
+  }
+  async function runEmailCheck(){
+    const email = $('em').value.trim();
+    if(!email){ setHint(''); return null; }
+    setHint('กำลังตรวจสอบอีเมล...');
+    const r = await checkEmail(email);
+    if($('em').value.trim() !== email) return null;
+    setHint(r.msg, r.ok ? 'pass' : 'bad');
+    return r;
+  }
+  $('em').addEventListener('blur', runEmailCheck);
+  $('em').addEventListener('input', () => setHint(''));
+  $('emHint').addEventListener('click', e => {
+    const f = e.target.getAttribute && e.target.getAttribute('data-fix');
+    if(f){ e.preventDefault(); $('em').value = f; runEmailCheck(); }
+  });
+
+  function showMsg(t){ $('msg').textContent = t; $('msg').classList.add('show'); }
+  function thaiError(e){
+    const m = (e && e.message || '').toLowerCase();
+    if(m.includes('already registered') || (e && e.code === 'user_already_exists')) return 'อีเมลนี้สมัครไว้แล้ว ลองเข้าสู่ระบบแทน';
+    if(m.includes('password') && (m.includes('at least') || m.includes('weak') || m.includes('short') || m.includes('character'))) return 'รหัสผ่านไม่ผ่านเงื่อนไขของระบบ กรุณาใช้รหัสผ่านที่ยาวและคาดเดายากขึ้น';
+    if(m.includes('signup') && (m.includes('disabled') || m.includes('not allowed'))) return 'ระบบปิดรับสมัครสมาชิกอยู่ กรุณาติดต่อผู้ดูแลระบบ';
+    if(m.includes('email') && m.includes('invalid')) return 'รูปแบบอีเมลไม่ถูกต้อง';
+    if(m.includes('rate limit') || m.includes('too many') || m.includes('seconds')) return 'ส่งคำขอหลายครั้งเกินไป กรุณารอสักครู่แล้วลองใหม่';
+    if(m.includes('fetch') || m.includes('network')) return 'เชื่อมต่ออินเทอร์เน็ตไม่ได้ กรุณาลองใหม่';
+    return 'สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่';
+  }
+
+
+  $('showBtn').addEventListener('click', () => {
+    const show = $('pw').type === 'password';
+    $('pw').type = $('pw2').type = show ? 'text' : 'password';
+    $('showBtn').textContent = show ? 'ซ่อน' : 'แสดง';
+  });
+
+  $('f').addEventListener('submit', async e => {
+    e.preventDefault();
+    $('msg').classList.remove('show');
+    const email = $('em').value.trim(), pw = $('pw').value, pw2 = $('pw2').value;
+    $('goBtn').disabled = true; $('goBtn').textContent = 'กำลังตรวจสอบ...';
+    const reset = () => { $('goBtn').disabled = false; $('goBtn').textContent = 'สมัครสมาชิก'; };
+
+    if(!email){ showMsg('กรุณากรอกอีเมล'); return reset(); }
+    const em = await runEmailCheck();
+    if(em && !em.ok){ showMsg('กรุณาตรวจสอบอีเมลอีกครั้ง'); return reset(); }
+    const r = checkRules(pw);
+    if(!(r.num && r.chr && r.max)){ showMsg('รหัสผ่านยังไม่ผ่านเงื่อนไขตามรายการด้านล่างช่องรหัสผ่าน'); return reset(); }
+    if(pw !== pw2){ showMsg('รหัสผ่านทั้งสองช่องไม่ตรงกัน'); return reset(); }
+
+    $('goBtn').textContent = 'กำลังสมัคร...';
+    try{
+      await auth.signUp(email, pw);
+      $('formWrap').style.display = 'none';
+      $('ok').classList.add('show');
+    }catch(err){
+      showMsg(thaiError(err));
+      reset();
+    }
+  });
+</script>
+</body>
+
+</html>
